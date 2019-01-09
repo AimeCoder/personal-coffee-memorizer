@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/coffeeApp.css">
+	<script src="./js/jquery-3.3.1.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<script src="./js/angular.min.js"></script>
+</head>
+<body>
+
+<div ng-app="coffeeMem" ng-controller="coffeeCtrl">
+
+<div class="container-fluid">
+	<div class="row" id="startMenu">
+		<div class="col-sm-4 col-sm-offset-4 text-center">
+		
+			<h1> Coffee Order Memorizer </h1>
+			
+			<p> You are given a list of coffee orders and <br>	
+			you must replicate the exact order and type of coffee given. </p>
+			
+			<select ng-model="difficulty">
+			<option ng-repeat="diff in modes" value="{{diff}}"> {{diff}} </option>
+			</select>
+		
+			<button ng-click="generateOrders()" onClick="startGame();"> Start Game </button>		
+		
+		</div>
+	</div>
+	
+	<div class="row ng-hide" id="gameScreen">
+	
+		<h1 class="text-center" id="timer"> Time Left to Memorize: Starting... </h1>
+		
+		<div class="col-sm-4 col-sm-offset-4 text-center customerOrder" ng-repeat="coffee in coffeeOrders track by $index">
+		
+			<h3> {{ coffee.size }} {{ coffee.type }} </h3>
+			<p> + {{ coffee.dairyAmt }} {{ coffee.dairy }} <br>
+				 + {{ coffee.sugarAmt }} Sugar 
+			</p>
+			
+		</div>	
+	</div>
+	
+	<div class="row ng-hide inputScreen"> <h1 class="text-center"> Replicate the Orders </h1> </div>
+	<div class="row ng-hide inputScreen" ng-repeat="emptyOrder in playerOrders track by $index">
+		
+		<h3 class="text-center"> Order #{{$index + 1}} <br> </h3>	
+		
+		<div class="col-sm-3" ></div>
+		<div class="col-sm-3 text-right" >
+				
+			<p class="inputText">  Size: </p> <br>				
+			<p class="inputText"> Coffee Type: </p> <br> 				
+			<p class="inputText"> Dairy: </p> <br>					
+			<p class="inputText"> # of Dairy: </p> <br>					
+			<p class="inputText"> # of Sugar: </p> <br>
+				
+		</div>
+		<div class="col-sm-3">
+		
+			<select ng-model="emptyOrder.size">
+			<option ng-repeat="s in sizes" value="{{s}}">{{s}} </option> 
+			</select> <br>
+				
+			<select ng-model="emptyOrder.type"> 
+			<option ng-repeat="c in coffeeType" value="{{c}}"> {{c}} </option>
+			</select> <br>
+			
+			<select ng-model="emptyOrder.dairy">
+			<option ng-repeat="d in dairyType" value="{{d}}"> {{d}} </option>
+			</select> <br>
+				
+			<select ng-model="emptyOrder.dairyAmt"> 
+			<option ng-repeat="n in numbers" value="{{n}}"> {{n}} </option>
+			</select> <br>
+				
+			<select ng-model="emptyOrder.sugarAmt">			
+			<option ng-repeat="n in numbers" value="{{n}}"> {{n}} </option>
+			</select> <br>
+			
+		</div>
+		<div class="col-sm-3" ></div>
+
+		
+	</div>
+	
+	<div class="ng-hide inputScreen text-center"> 
+		<button ng-click="checkOrders()" onClick="hideInputs();"> Give drinks! </button> 
+	</div>
+	
+	<div class="ng-hide resultScreen" ng-bind-html="renderHtml(result)")> </div>
+</div>
+
+</div>
+<script src="./controller/coffeeController.js"></script>
+<script>
+
+function startGame() {
+	// Creates a timer for 10 seconds ahead of current time
+	var countDownTimer = new Date().getTime() + 8000;
+	
+	var x = setInterval(function() {
+
+		// Current time
+		var now = new Date().getTime();
+		
+		// Distance between current time and countDownTimer
+		var distance = countDownTimer - now;
+		
+		// Calculate time in seconds
+		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		
+		// Show amount of seconds left in element id="timer"
+		$("#timer").html("Time Left to Memorize: " + seconds + "s ");
+		
+		// When countdown is done, hide the customer order
+		if (distance < 0) {
+			clearInterval(x);
+			$("#timer").html("Time Left to Memorize: Starting... ");
+			$("#gameScreen").addClass("ng-hide");
+			$(".inputScreen").removeClass("ng-hide");
+		}
+	}, 1000);
+	
+	$("#startMenu").addClass("ng-hide");
+	$("#gameScreen").removeClass("ng-hide");
+}
+
+function hideInputs() {
+	$(".inputScreen").addClass("ng-hide");
+	$(".resultScreen").removeClass("ng-hide");
+}
+
+function retry() {
+	$("#startMenu").removeClass("ng-hide");
+	$(".resultScreen").addClass("ng-hide");	
+}
+ 
+</script>
+</body>
+
+</html>
+
+

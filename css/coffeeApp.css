@@ -1,0 +1,22 @@
+body {
+	background-color: black;
+}
+
+p {
+	font-size: 14px;
+	color: white;
+}
+
+.inputText {
+	display: inline;
+	heidght: 10%;
+	width: 35%;
+}
+
+select {
+	display: inline;
+	height: 10%;
+	width: 30%;
+}
+
+
